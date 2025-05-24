@@ -27,12 +27,19 @@ connectCloudinary()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: [
-    // 'http://localhost:5173',
-    // 'http://localhost:3000',
-    'https://docbook-frontend.vercel.app',
-    
-  ]
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow your frontend domain
+    if (
+      origin === 'https://docbook-frontend.vercel.app' ||
+      origin === 'https://docbook-frontend.vercel.app/' // with trailing slash
+    ) {
+      return callback(null, true);
+    }
+    // Block other origins
+    return callback(new Error('Not allowed by CORS'));
+  }
 }));
 
 //api endpoint
