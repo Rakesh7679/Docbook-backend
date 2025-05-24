@@ -26,18 +26,26 @@ connectCloudinary()
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (
-      origin === 'https://docbook-frontend.vercel.app' ||
-      origin.endsWith('.vercel.app')
-    ) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  }
-}));
+const allowedOrigins = [
+  'https://docbook-frontend.vercel.app',
+  'https://docbook-admin.vercel.app'
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true // only needed if you're using cookies or sessions
+  })
+);
 
 //api endpoint
 app.use('/api/admin', adminRouter)
