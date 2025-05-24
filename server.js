@@ -1,64 +1,49 @@
 import express from 'express';
-const cors = require('cors');
-import cors from 'cors';
-// import 'dotenv/config'
+import cors from 'cors'; // ✅ only one import (remove 'const cors = require...')
+import dotenv from 'dotenv';
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
-import adminRouter from './routes/adminRoute.js'
-import dotenv from 'dotenv';
+import adminRouter from './routes/adminRoute.js';
 import doctorRouter from './routes/doctorRoute.js';
 import userRouter from './routes/userRoute.js';
-import path from 'path';
 
 dotenv.config();
 
-
-
-
-
-//app config
+// App config
 const app = express();
 const port = process.env.PORT || 4000;
-connectDB()
-connectCloudinary()
+connectDB();
+connectCloudinary();
 
-
-
-//middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+// ✅ Use CORS before any routes or body parsers
 app.use(cors({
   origin: [
     'https://docbook-frontend.vercel.app',
     'https://docbook-admin.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.options('*', cors()); // handle preflight for all routes
 
+// ✅ Optional: respond to preflight for all routes
+app.options('*', cors());
 
-//api endpoint
-app.use('/api/admin', adminRouter)
-app.use('/api/doctor', doctorRouter)
-app.use('/api/user', userRouter)
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// if(process.env.NODE_ENV === 'production'){
-//     app.use(express.static(path.join(__dirname, '../frontend/dist')))
-//     app.get('*', (req, res) => {
-//         res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'))
-//     })
-// }
+// API endpoints
+app.use('/api/admin', adminRouter);
+app.use('/api/doctor', doctorRouter);
+app.use('/api/user', userRouter);
 
-
-//localhost:4000/api/admin/add-doctor
-
+// Test route
 app.get('/', (req, res) => {
-    res.send('Hello World')
-})
+  res.send('Hello World');
+});
 
-//listening to server
+// Start server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-})
+  console.log(`Server is running on port ${port}`);
+});
