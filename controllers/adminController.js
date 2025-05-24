@@ -87,6 +87,8 @@ const addDoctor = async (req, res) => {
 //api for the addmin login
 
 const loginAdmin = async (req, res) => {
+     res.setHeader('Access-Control-Allow-Origin', 'https://docbook-admin.vercel.app');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     try {
 
