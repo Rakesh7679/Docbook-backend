@@ -26,6 +26,7 @@ connectCloudinary()
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const cors = require('cors');
 app.use(cors({
   origin: [
     'https://docbook-frontend.vercel.app',
