@@ -21,12 +21,19 @@ const port = process.env.PORT || 4000;
 connectDB()
 connectCloudinary()
 
-const __dirname = path.resolve();
+
 
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: [
+    // 'http://localhost:5173',
+    // 'http://localhost:3000',
+    'https://docbook-frontend.vercel.app',
+    
+  ]
+}));
 
 //api endpoint
 app.use('/api/admin', adminRouter)
