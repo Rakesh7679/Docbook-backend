@@ -46,6 +46,11 @@ const loginDoctor = async (req, res) => {
        const isMatch = await bcrypt.compare(password, doctor.password);
         if (isMatch) {
             const token = jwt.sign({ id: doctor._id }, process.env.JWT_SECRET)
+             res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,      // Render/production pe true
+                sameSite: 'none'   // Cross-origin ke liye
+            });
             res.json({
                 success: true,
                 message: "Login successful",
