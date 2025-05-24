@@ -98,6 +98,11 @@ const loginAdmin = async (req, res) => {
                 process.env.JWT_SECRET, 
                 { expiresIn: '1h' }
               )
+             res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,      // Render/production pe true
+                sameSite: 'none'   // Cross-origin ke liye
+            });
             res.json({
                 success: true,
                 token
